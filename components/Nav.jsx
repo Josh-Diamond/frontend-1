@@ -30,7 +30,7 @@ export default function Nav({ navData: { data } }) {
           boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.16)",
           position: "fixed",
           minHeight: "100vh",
-          backgroundColor: colors.brand,
+          backgroundColor: '#082B84',
           [breakingPoints.md]: {
             transition: ".2s",
             position: "fixed",
@@ -42,13 +42,14 @@ export default function Nav({ navData: { data } }) {
           <img
             onClick={() => toggleNav(false)}
             src={data.logo.url}
-            css={{ width: 200, margin: "50px 20px ", cursor: "pointer" }}
+            css={{ width: 200, margin: "50px 20px ", cursor: "pointer"}}
             alt={data.logo.alt}
           />
         </Link>
         <div
           css={{
             color: "white",
+            borderTop: '1px solid #CED5E6',
             a: {
               fontSize: 20,
               marginLeft: 10,
@@ -64,11 +65,13 @@ export default function Nav({ navData: { data } }) {
                   css={{
                     padding: "10px 25px",
                     cursor: "pointer",
+                    display: 'flex',
+                    alignItems: 'center',
                     ":hover": {
                       backgroundColor: colors.btnHover,
                     },
                   }}>
-                  <img src={icon.url} />
+                  <img src={icon.url}  />
                   <a>{RichText.asText(name)}</a>
                 </div>
               </Link>

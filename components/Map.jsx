@@ -4,10 +4,10 @@ import ReactMapGL, { Marker, NavigationControl } from "react-map-gl"
 export default function Map({ pumps, setModalId }) {
   const [viewPort, setViewPort] = useState({
     width: "100%",
-    height: "500px",
+    height: "100vh",
     latitude: 12.55,
     longitude: 104.9,
-    zoom: 6.28,
+    zoom: 7.2,
     minZoom: 6.28,
     maxZoom: 13,
   })
@@ -36,8 +36,8 @@ export default function Map({ pumps, setModalId }) {
         // andy's
         fitBounds={undefined}
         maxBounds={maxBounds}
-        mapStyle="mapbox://styles/brudnak/cjzypjc362w9u1clduir026aw"
-        mapboxApiAccessToken="pk.eyJ1IjoiYnJ1ZG5hayIsImEiOiJjanpramh2bnMwMGU4M210M3N5amRnMTVkIn0.ShGGESPCjVZo2MugiijwWw"
+        mapStyle="mapbox://styles/diamondmail91/ck26o0ysl68821cpa9h6gj8xc"
+        mapboxApiAccessToken="pk.eyJ1IjoiZGlhbW9uZG1haWw5MSIsImEiOiJjanpidzZxajMwMXF5M2Rueng0MmExc3FsIn0.8_SaAolyg_YzvdzClFuvXQ"
         onViewportChange={view => setViewPort({ ...view, width: "100%" })}
         css={{ borderRadius: 5 }}
         maxBounds={[
