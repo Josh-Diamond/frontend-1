@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import ReactMapGL, { Marker, NavigationControl } from "react-map-gl"
+import Modal from '../components/Modal'
 
-export default function Map({ pumps, setModalId }) {
+export default function Map({ pumps, setModalId, modalId }) {
   const [viewPort, setViewPort] = useState({
     width: "100%",
     height: "100vh",
@@ -74,6 +75,7 @@ export default function Map({ pumps, setModalId }) {
                 alt=""
               />
             ) : null}
+          {/* <Modal modalId={modalId} pumps={pumps} /> */}
           </Marker>
         ))}
         <div css={{ position: "absolute", right: 10, bottom: "9%" }}>
