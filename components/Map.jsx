@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import ReactMapGL, { Marker, NavigationControl } from "react-map-gl"
-import Modal from '../components/Modal'
+import Modal from "../components/Modal"
 import { getPumpStyles, breakingPoints } from "../components/Styles"
-import Draggable from 'react-draggable';
+import Draggable from "react-draggable"
 
 function hexToRGB(hex, alpha) {
   var r = parseInt(hex.slice(1, 3), 16),
@@ -19,6 +19,9 @@ function hexToRGB(hex, alpha) {
 export default function Map({ pumps, setModalId, modalId }) {
   const pumpStyles = getPumpStyles({ iconSize: 15 })
   const [expanded, setExpanded] = useState(false)
+  const [funcToggle, setFuncToggle] = useState(false)
+  const [unToggle, setUnToggle] = useState(false)
+  const [nonToggle, setNonToggle] = useState(false)
   const [viewPort, setViewPort] = useState({
     width: "100%",
     height: "100vh",
@@ -66,128 +69,316 @@ export default function Map({ pumps, setModalId, modalId }) {
           [-73.91058699000139, 40.87764500765852],
         ]}
         {...viewPort}>
+        {/* /////////////////Filter */}
+        <details
+          css={{
+            width: "250px",
+            backgroundColor: "#082B84",
+            borderRadius: "6px",
+            position: "absolute",
+            left: "1215px",
+            top: "15px",
+            zIndex: "9999999999999",
+          }}>
+          <summary
+            css={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              outline: "none",
+              cursor: "pointer",
+              margin: "0 5%",
+              "::-webkit-details-marker": {
+                display: "none",
+              },
+            }}
+            onClick={isExpanded}>
+            <p css={{ color: "white", fontWeight: "100" }}>Filter</p>
+            {expanded ? (
+              <p
+                css={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1.5rem",
+                  margin: "0",
+                }}>
+                -
+              </p>
+            ) : (
+              <p
+                css={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1.5rem",
+                  margin: "0",
+                }}>
+                +
+              </p>
+            )}
+          </summary>
 
-          {/* /////////////////Filter */}
-          <details css={{ width: '250px', backgroundColor: '#082B84', borderRadius: '6px', position: 'absolute', left: '1215px', top: '15px', zIndex: '9999999999999'}} onClick={isExpanded}>
-            <summary css={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', outline: "none",
-                  cursor: "pointer", margin: '0 5%',
-                  "::-webkit-details-marker": {
-                    display: "none",
-                  },}}>
-              <p css={{ color: 'white', fontWeight: '100'}}>Filter</p>
-              {expanded ? <p css={{ color: 'white', fontWeight: 'bold', fontSize: '1.5rem', margin: '0'}}>-</p> : <p css={{ color: 'white', fontWeight: 'bold', fontSize: '1.5rem', margin: '0'}}>+</p>}
-            </summary>
+          {/* Details */}
+          <div
+            css={{
+              backgroundColor: "white",
+              borderBottomLeftRadius: "6px",
+              borderBottomRightRadius: "6px",
+              cursor: "auto",
+            }}>
+            <form
+              css={{ display: "flex", flexDirection: "column", width: "100%" }}>
+              <label
+                for="country"
+                css={{ marginBottom: "5%", fontWeight: "bold", margin: "5%" }}>
+                Country
+              </label>
+              <select
+                name="country"
+                id="country"
+                css={{ margin: "0 5%", width: "80%", margin: "0 auto" }}>
+                <option value="Cambodia">Cambodia</option>
+                <option value="Uganda">Uganda</option>
+              </select>
 
-            {/* Details */}
-            <div css={{ backgroundColor: 'white', borderBottomLeftRadius: '6px', borderBottomRightRadius: '6px'}}>
-              <form css={{ display: "flex", flexDirection: "column", width: "100%" }}>
-                <label for="country" css={{ marginBottom: "5%", fontWeight: 'bold', margin: '0 5%' }}>
-                  Country
-                </label>
-                <select name="country" id='country' css={{ margin: '0 5%', width: '80%', margin: '0 auto'}}>
-                  <option value="Cambodia">Cambodia</option>
-                  <option value="Uganda">Uganda</option>
-                </select>
-
-                <label for="status" css={{ marginBottom: "5%", fontWeight: 'bold', margin: '0 5%' }}>
-                  Status
-                </label>
-                  {/* Functional */}
-                <div css={{ margin: '0 5%', display: 'flex', alignItems: 'center'}}>                  
-                    <div
-                      css={{
-                        borderRadius: "50%",
-                        width: 24,
-                        height: 24,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: hexToRGB(
-                          pumpStyles.status[2].color,
-                          0.2,
-                        ),
-                      }}>
-                      {pumpStyles.status[2].icon}
-                    </div>
-                    <p>Functional</p>
+              <label
+                for="status"
+                css={{ marginBottom: "5%", fontWeight: "bold", margin: "5%" }}>
+                Status
+              </label>
+              {/* Functional */}
+              <div
+                css={{
+                  margin: "0 5%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "85%",
+                }}>
+                <div css={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    css={{
+                      borderRadius: "50%",
+                      width: 24,
+                      height: 24,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginRight: "10px",
+                      backgroundColor: hexToRGB(
+                        pumpStyles.status[2].color,
+                        0.2,
+                      ),
+                    }}>
+                    {pumpStyles.status[2].icon}
                   </div>
+                  <p>Functional</p>
+                </div>
 
-                  {/* Unknown */}
-                  <div css={{ margin: '0 5%', display: 'flex', alignItems: 'center'}}>                  
-                    <div
-                      css={{
-                        borderRadius: "50%",
-                        width: 24,
-                        height: 24,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: hexToRGB(
-                          pumpStyles.status[1].color,
-                          0.2,
-                        ),
-                      }}>
-                      {pumpStyles.status[1].icon}
-                    </div>
-                    <p>Unknown</p>
-                  </div>
+                {/* toggle test */}
+                <div
+                  css={{
+                    background: "#D7D7D7",
+                    borderRadius: "50px",
+                    height: "20px",
+                    position: "relative",
+                    width: "40px",
+                  }}>
+                  <div
+                    onClick={() => setFuncToggle(!funcToggle)}
+                    css={
+                      funcToggle
+                        ? {
+                            background: "#01c000",
+                            borderRadius: "50px",
+                            height: "18px",
+                            left: "18px",
+                            position: "absolute",
+                            transition: "0.2s",
+                            width: "20px",
+                            cursor: "pointer",
+                          }
+                        : {
+                            background: "#f44336",
+                            borderRadius: "50px",
+                            height: "18px",
+                            left: "0",
+                            position: "absolute",
+                            transition: "0.2s",
+                            width: "20px",
+                            cursor: "pointer",
+                          }
+                    }
+                  />
+                </div>
+                {/* end toggle test */}
+              </div>
 
-                    {/* Non-Functional */}
-                  <div css={{ margin: '0 5%', display: 'flex', alignItems: 'center'}}>                  
-                    <div
-                      css={{
-                        borderRadius: "50%",
-                        width: 24,
-                        height: 24,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: hexToRGB(
-                          pumpStyles.status[0].color,
-                          0.2,
-                        ),
-                      }}>
-                      {pumpStyles.status[0].icon}
-                    </div>
-                    <p>Non-Functional</p>
+              {/* Unknown */}
+              <div
+                css={{
+                  margin: "0 5%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "85%",
+                }}>
+                <div css={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    css={{
+                      borderRadius: "50%",
+                      width: 24,
+                      height: 24,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginRight: "10px",
+                      backgroundColor: hexToRGB(
+                        pumpStyles.status[1].color,
+                        0.2,
+                      ),
+                    }}>
+                    {pumpStyles.status[1].icon}
                   </div>
-              </form>
-            </div>
-          </details>
-          {/* ////////////////////////// */}
+                  <p>Unknown</p>
+                </div>
+                <div
+                  css={{
+                    background: "#D7D7D7",
+                    borderRadius: "50px",
+                    height: "20px",
+                    position: "relative",
+                    width: "40px",
+                  }}>
+                  <div
+                    onClick={() => setUnToggle(!unToggle)}
+                    css={
+                      unToggle
+                        ? {
+                            background: "#01c000",
+                            borderRadius: "50px",
+                            height: "18px",
+                            left: "18px",
+                            position: "absolute",
+                            transition: "0.2s",
+                            width: "20px",
+                            cursor: "pointer",
+                          }
+                        : {
+                            background: "#f44336",
+                            borderRadius: "50px",
+                            height: "18px",
+                            left: "0",
+                            position: "absolute",
+                            transition: "0.2s",
+                            width: "20px",
+                            cursor: "pointer",
+                          }
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Non-Functional */}
+              <div
+                css={{
+                  margin: "0 5%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "85%",
+                }}>
+                <div css={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    css={{
+                      borderRadius: "50%",
+                      width: 24,
+                      height: 24,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginRight: "10px",
+                      backgroundColor: hexToRGB(
+                        pumpStyles.status[0].color,
+                        0.2,
+                      ),
+                    }}>
+                    {pumpStyles.status[0].icon}
+                  </div>
+                  <p>Non-Functional</p>
+                </div>
+                <div
+                  css={{
+                    background: "#D7D7D7",
+                    borderRadius: "50px",
+                    height: "20px",
+                    position: "relative",
+                    width: "40px",
+                  }}>
+                  <div
+                    onClick={() => setNonToggle(!nonToggle)}
+                    css={
+                      nonToggle
+                        ? {
+                            background: "#01c000",
+                            borderRadius: "50px",
+                            height: "18px",
+                            left: "18px",
+                            position: "absolute",
+                            transition: "0.2s",
+                            width: "20px",
+                            cursor: "pointer",
+                          }
+                        : {
+                            background: "#f44336",
+                            borderRadius: "50px",
+                            height: "18px",
+                            left: "0",
+                            position: "absolute",
+                            transition: "0.2s",
+                            width: "20px",
+                            cursor: "pointer",
+                          }
+                    }
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+        </details>
+        {/* ////////////////////////// */}
 
         {pumps.map(pump => (
           <>
-          <Marker
-            latitude={pump.latitude}
-            longitude={pump.longitude}
-            offsetLeft={-20}
-            offsetTop={-10}>
-             {/* { modalId === pump.id ? <Modal modalId={modalId} pumps={pumps} /> : null} */}
-            {pump.status === 0 ? (
-              <img
-                src={mapPins.status.nonFunctional}
-                width={"31px"}
-                css={{ zIndex: 2 }}
-                onClick={() => setModalId(pump.id)}
-                alt=""
-              />
-            ) : pump.status === 1 ? (
-              <img
-                src={mapPins.status.unknown}
-                width={"31px"}
-                onClick={() => setModalId(pump.id)}
-                alt=""
-              />
-            ) : pump.status === 2 ? (
-              <img
-                src={mapPins.status.functional}
-                width={"31px"}
-                onClick={() => setModalId(pump.id)}
-                alt=""
-              />
-            ) : null}
-          </Marker>
+            <Marker
+              latitude={pump.latitude}
+              longitude={pump.longitude}
+              offsetLeft={-20}
+              offsetTop={-10}>
+              {/* { modalId === pump.id ? <Modal modalId={modalId} pumps={pumps} /> : null} */}
+              {pump.status === 0 ? (
+                <img
+                  src={mapPins.status.nonFunctional}
+                  width={"31px"}
+                  css={{ zIndex: 2 }}
+                  onClick={() => setModalId(pump.id)}
+                  alt=""
+                />
+              ) : pump.status === 1 ? (
+                <img
+                  src={mapPins.status.unknown}
+                  width={"31px"}
+                  onClick={() => setModalId(pump.id)}
+                  alt=""
+                />
+              ) : pump.status === 2 ? (
+                <img
+                  src={mapPins.status.functional}
+                  width={"31px"}
+                  onClick={() => setModalId(pump.id)}
+                  alt=""
+                />
+              ) : null}
+            </Marker>
           </>
         ))}
         {/* <div> */}
