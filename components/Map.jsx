@@ -1,8 +1,24 @@
 import React, { useState } from "react"
 import ReactMapGL, { Marker, NavigationControl } from "react-map-gl"
 import Modal from '../components/Modal'
+import { getPumpStyles, breakingPoints } from "../components/Styles"
+import Draggable from 'react-draggable';
+
+function hexToRGB(hex, alpha) {
+  var r = parseInt(hex.slice(1, 3), 16),
+    g = parseInt(hex.slice(3, 5), 16),
+    b = parseInt(hex.slice(5, 7), 16)
+
+  if (alpha) {
+    return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")"
+  } else {
+    return "rgb(" + r + ", " + g + ", " + b + ")"
+  }
+}
 
 export default function Map({ pumps, setModalId, modalId }) {
+  const pumpStyles = getPumpStyles({ iconSize: 15 })
+  const [expanded, setExpanded] = useState(false)
   const [viewPort, setViewPort] = useState({
     width: "100%",
     height: "100vh",
@@ -31,6 +47,10 @@ export default function Map({ pumps, setModalId, modalId }) {
     },
   }
 
+  const isExpanded = () => {
+    setExpanded(!expanded)
+  }
+
   return (
     <div css={{ img: { cursor: "pointer" } }}>
       <ReactMapGL
@@ -46,12 +66,104 @@ export default function Map({ pumps, setModalId, modalId }) {
           [-73.91058699000139, 40.87764500765852],
         ]}
         {...viewPort}>
+
+          {/* /////////////////Filter */}
+          <details css={{ width: '250px', backgroundColor: '#082B84', borderRadius: '6px', position: 'absolute', left: '1215px', top: '15px', zIndex: '9999999999999'}} onClick={isExpanded}>
+            <summary css={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', outline: "none",
+                  cursor: "pointer", margin: '0 5%',
+                  "::-webkit-details-marker": {
+                    display: "none",
+                  },}}>
+              <p css={{ color: 'white', fontWeight: '100'}}>Filter</p>
+              {expanded ? <p css={{ color: 'white', fontWeight: 'bold', fontSize: '1.5rem', margin: '0'}}>-</p> : <p css={{ color: 'white', fontWeight: 'bold', fontSize: '1.5rem', margin: '0'}}>+</p>}
+            </summary>
+
+            {/* Details */}
+            <div css={{ backgroundColor: 'white', borderBottomLeftRadius: '6px', borderBottomRightRadius: '6px'}}>
+              <form css={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                <label for="country" css={{ marginBottom: "5%", fontWeight: 'bold', margin: '0 5%' }}>
+                  Country
+                </label>
+                <select name="country" id='country' css={{ margin: '0 5%', width: '80%', margin: '0 auto'}}>
+                  <option value="Cambodia">Cambodia</option>
+                  <option value="Uganda">Uganda</option>
+                </select>
+
+                <label for="status" css={{ marginBottom: "5%", fontWeight: 'bold', margin: '0 5%' }}>
+                  Status
+                </label>
+                  {/* Functional */}
+                <div css={{ margin: '0 5%', display: 'flex', alignItems: 'center'}}>                  
+                    <div
+                      css={{
+                        borderRadius: "50%",
+                        width: 24,
+                        height: 24,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: hexToRGB(
+                          pumpStyles.status[2].color,
+                          0.2,
+                        ),
+                      }}>
+                      {pumpStyles.status[2].icon}
+                    </div>
+                    <p>Functional</p>
+                  </div>
+
+                  {/* Unknown */}
+                  <div css={{ margin: '0 5%', display: 'flex', alignItems: 'center'}}>                  
+                    <div
+                      css={{
+                        borderRadius: "50%",
+                        width: 24,
+                        height: 24,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: hexToRGB(
+                          pumpStyles.status[1].color,
+                          0.2,
+                        ),
+                      }}>
+                      {pumpStyles.status[1].icon}
+                    </div>
+                    <p>Unknown</p>
+                  </div>
+
+                    {/* Non-Functional */}
+                  <div css={{ margin: '0 5%', display: 'flex', alignItems: 'center'}}>                  
+                    <div
+                      css={{
+                        borderRadius: "50%",
+                        width: 24,
+                        height: 24,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: hexToRGB(
+                          pumpStyles.status[0].color,
+                          0.2,
+                        ),
+                      }}>
+                      {pumpStyles.status[0].icon}
+                    </div>
+                    <p>Non-Functional</p>
+                  </div>
+              </form>
+            </div>
+          </details>
+          {/* ////////////////////////// */}
+
         {pumps.map(pump => (
+          <>
           <Marker
             latitude={pump.latitude}
             longitude={pump.longitude}
             offsetLeft={-20}
             offsetTop={-10}>
+             {/* { modalId === pump.id ? <Modal modalId={modalId} pumps={pumps} /> : null} */}
             {pump.status === 0 ? (
               <img
                 src={mapPins.status.nonFunctional}
@@ -75,9 +187,12 @@ export default function Map({ pumps, setModalId, modalId }) {
                 alt=""
               />
             ) : null}
-          {/* <Modal modalId={modalId} pumps={pumps} /> */}
           </Marker>
+          </>
         ))}
+        {/* <div> */}
+        <Modal modalId={modalId} pumps={pumps} />
+        {/* </div> */}
         <div css={{ position: "absolute", right: 10, bottom: "9%" }}>
           <NavigationControl showZoom />
         </div>

@@ -1,17 +1,16 @@
 import React from "react"
 import ModalCard from "./ModalCard"
+import MonitorCard from './MonitorCard'
 
 export default function Modal({ pumps, modalId }) {
   const selectedPump = modalId ? pumps.find(pump => pump.id === modalId) : null
+  console.log("modalID", modalId)
+  console.log("selectedPump", selectedPump)
   return (
     <div>
       {modalId ? (
-        <div>
-          <h3>Pump #{selectedPump.id}</h3>
-        </div>
-      ) : (
-        <h3>Select a Pump</h3>
-      )}
+        <ModalCard pump={selectedPump} />
+      ) : null}
     </div>
   )
   // return (
