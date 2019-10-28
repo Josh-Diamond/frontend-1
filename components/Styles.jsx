@@ -4,7 +4,8 @@ import { FiHelpCircle, FiAlertCircle, FiCheckCircle } from "react-icons/fi"
 export const colors = {
   main: "#fff",
   brand: "#0282FA",
-  btnHover: "#1e90fe",
+  // btnHover: "#1e90fe",
+  btnHover: "#1C49BB",
   backgroundColor: "#F3F7FC",
   text: "#886BFE",
   success: "#01c000",
@@ -12,6 +13,7 @@ export const colors = {
   orange: "#FFAD34",
   darkText: "#2A2A32",
 }
+
 
 export const breakingPoints = {
   xl: "@media (max-width: 1200px)",

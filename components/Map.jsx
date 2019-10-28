@@ -28,6 +28,7 @@ export default function Map({ pumps, setModalId, modalId }) {
     height: "100vh",
     latitude: 12.55,
     longitude: 104.9,
+    center: [12.55, 104.9],
     zoom: 7.2,
     minZoom: 6.28,
     maxZoom: 13,
@@ -55,6 +56,10 @@ export default function Map({ pumps, setModalId, modalId }) {
     setExpanded(!expanded)
   }
 
+  const mapAdjust = pump => {
+    setViewPort({...viewPort, center: [pump.latitude, pump.longitude]})
+  }
+
   return (
     <div css={{ img: { cursor: "pointer" } }}>
       <ReactMapGL
@@ -80,6 +85,9 @@ export default function Map({ pumps, setModalId, modalId }) {
         </div>
         {/* End SearchBar */}
 
+        {/* Modal Card */}
+        {/* <Modal modalId={modalId} pumps={pumps} setModalId={setModalId} /> */}
+        {/* End Modal Card */}
         <details
           css={{
             width: "250px",
@@ -365,8 +373,9 @@ export default function Map({ pumps, setModalId, modalId }) {
               latitude={pump.latitude}
               longitude={pump.longitude}
               offsetLeft={-20}
-              offsetTop={-10}>
-              {/* { modalId === pump.id ? <Modal modalId={modalId} pumps={pumps} /> : null} */}
+              offsetTop={-10}
+              onClick={()=> mapAdjust(pump)}>
+              {/* { pump.id === modalId ? <Modal modalId={modalId} pumps={pumps} setModalId={setModalId} /> : null} */}
               {pump.status === 0 ? (
                 <img
                   src={mapPins.status.nonFunctional}
@@ -393,8 +402,8 @@ export default function Map({ pumps, setModalId, modalId }) {
             </Marker>
           </>
         ))}
-        {/* <div> */}
-        <Modal modalId={modalId} pumps={pumps} />
+        {/* <div css={{ zIndex: 99999999999999999999999999999999999999999}}> */}
+        <Modal modalId={modalId} pumps={pumps} setModalId={setModalId} />
         {/* </div> */}
         <div css={{ position: "absolute", right: 10, bottom: "9%" }}>
           <NavigationControl showZoom />

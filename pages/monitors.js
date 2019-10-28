@@ -1,72 +1,106 @@
-import React, { useState } from "react"
-import { colors, breakingPoints, getPumpStyles } from "../components/Styles"
+import React, { useState, useEffect } from "react"
+import Header from "../components/Header"
 import Seo from "../components/Seo"
-import DashHeader from "../components/Header"
-import MonitorCard from "../components/MonitorCard"
-import LegandModal from "../components/LegandModal"
+import {
+  FiEdit,
+  FiHelpCircle,
+  FiAlertCircle,
+  FiCheckCircle,
+} from "react-icons/fi"
+import Card from "../components/Card"
+import { colors, breakingPoints } from "../components/Styles"
+import BlankCard from "../components/BlankCard"
+import Map from "../components/Map"
+import { LineChart } from "../components/LineChart"
+import Modal from "../components/Modal"
 
 export default function Monitors({ pumps }) {
-  const [filter, setFilter] = useState({ 0: true, 1: true, 2: true })
+  const [modalId, setModalId] = useState(null)
 
   return (
-    <>
-      {/* <Seo title="Monitors • Welldone Dashboard" /> */}
-      <DashHeader
-        title="Monitors"
-        // actions={
-        //   <div>
-        //     <button
-        //       active={filter[0]}
-        //       onClick={() => setFilter({ ...filter, 2: !filter[2] })}>
-        //       Functional
-        //     </button>
-        //     <button
-        //       active={filter[1]}
-        //       onClick={() => setFilter({ ...filter, 1: !filter[1] })}>
-        //       Non-Functional
-        //     </button>
-        //     <button onClick={() => setFilter({ ...filter, 0: !filter[0] })}>
-        //       Unknown
-        //     </button>
-        //   </div>
-        // }
-      />
-      <LegandModal />
-      <div
-        css={{
-          padding: "0 20px",
-          maxWidth: 1240,
-          margin: "0 auto",
-        }}>
+    <div css={{ width: "100%" }}>
+      {/* <Seo title="Home • Welldone Dashboard" description="" /> */}
+      {/* <Header
+        title="Insights"
+        actions={
+          <div>
+            <a>Weekly</a>
+            <a>Monthly</a>
+          </div>
+        }
+      /> */}
+      <div css={{ padding: "20px 20px", maxWidth: 1240, margin: "0 auto" }}>
+        {/* Card Section */}
         <div
           css={{
             display: "flex",
-            flexWrap: "wrap",
-          }}>
-          {pumps
-            ? pumps
-                .filter(pump => !pump.error)
-                .map(pump => {
-                  return <MonitorCard pump={pump} />
-                })
-            : null}
-        </div>
-        <h4>Non Functional Pumps</h4>
-        <div
-          css={{
-            display: "flex",
-            flexWrap: "wrap",
-          }}>
-          {pumps
-            ? pumps
-                .filter(pump => pump.error)
-                .map(pump => {
-                  return <MonitorCard error pump={pump} />
-                })
-            : null}
+          }}></div>
+        {/* Maps and Montior */}
+        <div>
+          <div
+            css={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+            }}>
+            <Card
+              text="Monitor Reports"
+              icon={FiEdit}
+              value={pumps.length}
+              color={colors.brand}
+              toggleSummary="View Reports"
+              toggle={<h3>Content</h3>}
+            />
+            <Card
+              text="Functional"
+              icon={FiCheckCircle}
+              value={pumps.filter(pump => pump.status === 2).length}
+              color={colors.success}
+              progress={Math.ceil(
+                (pumps.filter(pump => pump.status === 2).length /
+                  pumps.length) *
+                  100,
+              )}
+            />
+            <Card
+              text="Non-Functional"
+              icon={FiAlertCircle}
+              value={pumps.filter(pump => pump.status === 0).length}
+              color={colors.danger}
+              progress={Math.ceil(
+                (pumps.filter(pump => pump.status === 0).length /
+                  pumps.length) *
+                  100,
+              )}
+            />
+            <Card
+              text="Unknown"
+              icon={FiHelpCircle}
+              value={pumps.filter(pump => pump.status === 1).length}
+              color={colors.orange}
+              progress={Math.ceil(
+                (pumps.filter(pump => pump.status === 1).length /
+                  pumps.length) *
+                  100,
+              )}
+            />
+            <div
+              css={{
+                width: "100%",
+                marginBottom: 20,
+                [breakingPoints.md]: {
+                  width: "100%",
+                },
+              }}>
+              <BlankCard style={{ padding: "10px " }}>
+                {/* <Map pumps={pumps} setModalId={setModalId} /> */}
+                <h2 css={{ textAlign: 'center'}}>**AG-Grid Here**</h2>
+              </BlankCard>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

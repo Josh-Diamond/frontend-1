@@ -21,7 +21,7 @@ function hexToRGB(hex, alpha) {
     return "rgb(" + r + ", " + g + ", " + b + ")"
   }
 }
-export default function ModalCard({ pump, error }) {
+export default function ModalCard({ pump, error, setModalId }) {
   const pumpStyles = getPumpStyles({ iconSize: 25 })
   const [graphData] = useState(() => {
     if (pump.statuses) {
@@ -40,9 +40,10 @@ export default function ModalCard({ pump, error }) {
         // padding: "20px 30px",
         backgroundColor: "white",
         border: "1px solid #DDE1E5",
+        // zIndex: '99999999999999999999999',
         // overflow: "hidden",
         // width: "100%",
-        width: '20%',
+        width: '300px',
         height: '150px',
         borderRadius: 10,
         margin: "10px 1%",
@@ -134,7 +135,10 @@ export default function ModalCard({ pump, error }) {
               />
             </AreaChart>
           </ResponsiveContainer> */}
-          <a href='#' css={{ margin: '0 37%', color: '#082B84', textDecoration: 'none', fontWeight: 'bold'}}>More Info</a>
+          <div css={{ padding: '0 5%', width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+          <a href='#' css={{ color: '#212121', textDecoration: 'none', fontWeight: '100', ':hover': {color: '#082B84', textDecoration: 'none', fontWeight: 'bold'}}}>More Info</a>
+          <a href='#' css={{ color: '#212121', textDecoration: 'none', fontWeight: '100', ':hover': {color: '#f44336', textDecoration: 'none', fontWeight: 'bold'}}} onClick={()=> setModalId(null)}>Close</a>
+          </div>
         </div>
       ) : null}
     </div>
